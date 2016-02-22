@@ -2,6 +2,7 @@ package rbac
 
 import (
 	//"fmt"
+	"fmt"
 	"github.com/astaxie/beego"
 	. "github.com/beego/admin/src"
 	m "github.com/beego/admin/src/models"
@@ -31,7 +32,7 @@ func (this *MainController) Index() {
 	if userinfo == nil {
 		this.Ctx.Redirect(302, beego.AppConfig.String("rbac_auth_gateway"))
 	}
-	tree:=this.GetTree()
+	tree := this.GetTree()
 	if this.IsAjax() {
 		this.Data["json"] = &tree
 		this.ServeJSON()
@@ -41,7 +42,7 @@ func (this *MainController) Index() {
 		this.Data["userinfo"] = userinfo
 		this.Data["groups"] = groups
 		this.Data["tree"] = &tree
-		if this.GetTemplatetype() != "easyui"{
+		if this.GetTemplatetype() != "easyui" {
 			this.Layout = this.GetTemplatetype() + "/public/layout.tpl"
 		}
 		this.TplName = this.GetTemplatetype() + "/public/index.tpl"
@@ -56,10 +57,12 @@ func (this *MainController) Login() {
 		password := this.GetString("password")
 		user, err := CheckLogin(username, password)
 		if err == nil {
+			fmt.Println("***********************")
 			this.SetSession("userinfo", user)
 			accesslist, _ := GetAccessList(user.Id)
 			this.SetSession("accesslist", accesslist)
 			this.Rsp(true, "登录成功")
+			this.Ctx.Redirect(302, this.Input().Get("ret"))
 			return
 		} else {
 			this.Rsp(false, err.Error())
@@ -68,8 +71,10 @@ func (this *MainController) Login() {
 
 	}
 	userinfo := this.GetSession("userinfo")
+	fmt.Println("ret===========", this.Input().Get("ret"))
+	fmt.Println("userinfo=", userinfo)
 	if userinfo != nil {
-		this.Ctx.Redirect(302, "/public/index")
+		this.Ctx.Redirect(302, this.Input().Get("ret"))
 	}
 	this.TplName = this.GetTemplatetype() + "/public/login.tpl"
 }
