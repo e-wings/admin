@@ -24,9 +24,9 @@ func initialize() {
 	mime.AddExtensionType(".css", "text/css")
 	//判断初始化参数
 	initArgs()
-
+	//连接数据库
 	models.Connect()
-
+	//初始化路由
 	router()
 	beego.AddFuncMap("stringsToJson", StringsToJson)
 }
