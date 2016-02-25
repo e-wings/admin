@@ -2,7 +2,6 @@ package rbac
 
 import (
 	//"fmt"
-	"fmt"
 	"github.com/astaxie/beego"
 	. "github.com/beego/admin/src"
 	m "github.com/beego/admin/src/models"
@@ -49,32 +48,29 @@ func (this *MainController) Index() {
 	}
 }
 
-//登录
+//登录，分为get访问和ajax访问两种访问方式
 func (this *MainController) Login() {
 	isajax := this.GetString("isajax")
+	//当isajax=="1"时，实际上是ajax访问，必须返回json，并return
 	if isajax == "1" {
 		username := this.GetString("username")
 		password := this.GetString("password")
 		user, err := CheckLogin(username, password)
 		if err == nil {
-			fmt.Println("***********************")
 			this.SetSession("userinfo", user)
 			accesslist, _ := GetAccessList(user.Id)
 			this.SetSession("accesslist", accesslist)
 			this.Rsp(true, "登录成功")
-			this.Ctx.Redirect(302, this.Input().Get("ret"))
 			return
 		} else {
 			this.Rsp(false, err.Error())
 			return
 		}
-
 	}
 	userinfo := this.GetSession("userinfo")
-	fmt.Println("ret===========", this.Input().Get("ret"))
-	fmt.Println("userinfo=", userinfo)
 	if userinfo != nil {
 		this.Ctx.Redirect(302, this.Input().Get("ret"))
+		return
 	}
 	this.TplName = this.GetTemplatetype() + "/public/login.tpl"
 }

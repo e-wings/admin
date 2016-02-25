@@ -19,22 +19,40 @@ var URL="/public"
         }]
         });
     });
+
+//获取url中参数
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); 
+    return null;
+} 
+
 function fromsubmit(){
+    var ret=getQueryString('ret')
+    alert("ret="+ret);
     $("#form").form('submit',{
-        url:URL+'/login?isajax=1',
+        url:URL+'/login?isajax=1&ret=',
         onSubmit:function(){
             return $("#form").form('validate');
         },
         success:function(r){
             var r = $.parseJSON( r );
+            alert("success: r.status="+r.status);
             if(r.status){
-                location.href = URL+"/index"
+                if(ret!=null){
+                    alert("ret="+ret);
+                    location.href=ret;
+                } else {
+                    location.href = URL+"/index"
+                }
             }else{
                 vac.alert(r.info);
             }
         }
     });
 }
+
     //这个就是键盘触发的函数
 var SubmitOrHidden = function(evt){
     evt = window.event || evt;
