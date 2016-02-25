@@ -20,6 +20,8 @@ func AccessRegister() {
 		var accesslist map[string]bool
 		if user_auth_type > 0 {
 			params := strings.Split(strings.ToLower(ctx.Request.RequestURI), "/")
+			//解决最后一个变量带参数的问题，比如category?op=add,会忽略?op=add
+			params[len(params)-1] = strings.Split(params[len(params)-1], "?")[0]
 			if CheckAccess(params) {
 				uinfo := ctx.Input.Session("userinfo")
 				if uinfo == nil {
@@ -63,7 +65,6 @@ func CheckAccess(params []string) bool {
 	// }
 	if params[1] != "" {
 		for _, nap := range strings.Split(beego.AppConfig.String("not_auth_package"), ",") {
-			fmt.Println(params[1], "-", nap)
 			if params[1] == nap {
 				return false
 			}
@@ -95,6 +96,7 @@ func AccessDecision(params []string, accesslist map[string]bool) bool {
 		if len(accesslist) < 1 {
 			return false
 		}
+		fmt.Println("s=", s)
 		_, ok := accesslist[s]
 		if ok != false {
 			return true
