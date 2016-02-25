@@ -30,7 +30,6 @@ function getQueryString(name) {
 
 function fromsubmit(){
     var ret=getQueryString('ret')
-    alert("ret="+ret);
     $("#form").form('submit',{
         url:URL+'/login?isajax=1&ret=',
         onSubmit:function(){
@@ -38,10 +37,8 @@ function fromsubmit(){
         },
         success:function(r){
             var r = $.parseJSON( r );
-            alert("success: r.status="+r.status);
             if(r.status){
                 if(ret!=null){
-                    alert("ret="+ret);
                     location.href=ret;
                 } else {
                     location.href = URL+"/index"
