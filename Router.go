@@ -6,7 +6,7 @@ import (
 )
 
 func router() {
-	beego.Router("/", &rbac.MainController{}, "*:Index")
+	//beego.Router("/", &rbac.MainController{}, "*:Index")
 	beego.Router("/public/index", &rbac.MainController{}, "*:Index")
 	beego.Router("/public/login", &rbac.MainController{}, "*:Login")
 	beego.Router("/public/logout", &rbac.MainController{}, "*:Logout")

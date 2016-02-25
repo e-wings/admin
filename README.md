@@ -78,8 +78,8 @@ rbac_user_table = user
 #admin用户名 此用户登录不用认证
 rbac_admin_user = admin
 
-#默认不需要认证模块
-not_auth_package = public,static
+#默认不需要认证模块，/代表首页，即匹配http://DEMO-DOMANIN和http://DEMO-DOMAIN/
+not_auth_package = public,static,/
 #默认认证类型 0 不认证 1 登录认证 2 实时认证
 user_auth_type = 1
 #默认登录网关

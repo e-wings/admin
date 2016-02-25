@@ -61,9 +61,18 @@ func CheckAccess(params []string) bool {
 	// if len(params) < 3 {
 	// 	return false
 	// }
-	for _, nap := range strings.Split(beego.AppConfig.String("not_auth_package"), ",") {
-		if params[1] == nap {
-			return false
+	if params[1] != "" {
+		for _, nap := range strings.Split(beego.AppConfig.String("not_auth_package"), ",") {
+			fmt.Println(params[1], "-", nap)
+			if params[1] == nap {
+				return false
+			}
+		}
+	} else {
+		for _, nap := range strings.Split(beego.AppConfig.String("not_auth_package"), ",") {
+			if nap == "/" {
+				return false
+			}
 		}
 	}
 	return true
